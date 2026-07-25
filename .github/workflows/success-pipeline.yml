@@ -1,12 +1,8 @@
-name: OmniTrace CI Pipeline
+name: 1 - Successful CI Pipeline
 on:
-  push:
-    branches: [ "main", "feature/*" ]
-  pull_request:
-    branches: [ "main" ]
+  workflow_dispatch:
 jobs:
   test-frontend:
-    name: Run TypeScript Tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -18,7 +14,6 @@ jobs:
           npm install
           npm test
   test-backend:
-    name: Run Python API Tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
