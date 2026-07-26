@@ -27,7 +27,7 @@ jobs:
       - name: Trigger OmniTrace Orchestrator on Failure
         if: failure()
         run: |
-          curl -X POST https://3ea77f1a180ec2b8-157-51-51-237.serveousercontent.com/webhooks/github \
+          curl --max-time 10 -X POST https://3ea77f1a180ec2b8-157-51-51-237.serveousercontent.com/webhooks/github \
             -H "Content-Type: application/json" \
             -d '{
               "repository_url": "https://github.com/${{ github.repository }}",
