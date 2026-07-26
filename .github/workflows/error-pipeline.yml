@@ -24,9 +24,7 @@ jobs:
           python-version: '3.11'
       - working-directory: ./backend
         run: |
-          pip install -r requirements.txt
-          echo "Simulating a bad deployment crash for OmniTrace..."
-          python -c "assert 500 == 200, 'Simulated Backend Crash: test_api.py failed'"
+          pip install -r requirements.txt requests
           pytest tests/
       - name: Trigger OmniTrace Orchestrator on Failure
         if: failure()
@@ -68,4 +66,3 @@ jobs:
               "owner": "${{ github.repository_owner }}",
               "repo": "${{ github.event.repository.name }}"
             }'
-
