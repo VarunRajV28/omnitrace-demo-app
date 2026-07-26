@@ -22,7 +22,7 @@ jobs:
           python-version: '3.11'
       - working-directory: ./backend
         run: |
-          pip install -r requirements.txt
+          pip install -r requirements.txt requests
           pytest tests/
       - name: Trigger OmniTrace Orchestrator on Failure
         if: failure()
