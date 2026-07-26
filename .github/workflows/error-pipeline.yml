@@ -1,5 +1,7 @@
 name: 2 - Failing CI Pipeline (Trigger OmniTrace)
 on:
+  push:
+    branches: [ main, master ]
   workflow_dispatch:
 jobs:
   test-frontend:
@@ -40,3 +42,30 @@ jobs:
               "owner": "${{ github.repository_owner }}",
               "repo": "${{ github.event.repository.name }}"
             }'
+  test-payment-crash:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - working-directory: ./services-code/payment
+        run: |
+          npm install
+          echo "Executing payment charge test..."
+          node -e "require('./charge').charge({ creditCard: { creditCardNumber: '4111111111111111' } })"
+      - name: Trigger OmniTrace Orchestrator on Failure
+        if: failure()
+        run: |
+          curl -X POST https://ten-times-divide.loca.lt/webhooks/github \
+            -H "Content-Type: application/json" \
+            -d '{
+              "repository_url": "https://github.com/${{ github.repository }}",
+              "branch_name": "${{ github.ref_name }}",
+              "commit_sha": "${{ github.sha }}",
+              "failing_job_id": "${{ github.run_id }}",
+              "run_id": "${{ github.run_id }}",
+              "owner": "${{ github.repository_owner }}",
+              "repo": "${{ github.event.repository.name }}"
+            }'
+
